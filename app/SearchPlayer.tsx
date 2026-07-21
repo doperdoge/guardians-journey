@@ -5,7 +5,8 @@ import React, { useState } from 'react';
 export default function SearchPlayer(){
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
-    let user_membership_id = 0;
+    let user_membership_id = "";
+    let user_membership_type = "";
 
     async function handleChanges(value: string){
         setSearch(value);
@@ -19,29 +20,34 @@ export default function SearchPlayer(){
         try {
             const res = await fetch(`http://localhost:3000/api/user?${params}`);
             const data = await res.json();
-            console.log(data.Response);
             setResults(data.Response.searchResults);
         } catch (error) {
             console.error(error)
         }
     }
 
-    function handleSelect(username: string){
+    async function handleSelect(username: string){
         setSearch(username);
         setResults([]);
+        const params = new URLSearchParams();
+        params.append("membershipType", user_membership_type);
+        params.append("membershipID", user_membership_id)
+
+        try {
+            const res = await fetch(`http://localhost:3000/api/user-data?${params}`);
+            const data = await res.json();
+            console.log(data)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
-    function setID(userID: number){
+    function setID(userID: string, memberType: string){
         user_membership_id = userID;
-        console.log(user_membership_id);
+        user_membership_type = memberType;
     }
 
     return(
-
-                // {/* <form action={getIGN}>
-                //     <input type="text" name="name" placeholder="Input Username"/>
-                //     <button type="submit">Enter</button>
-                // </form> */}
         <div>
             <form>
                 <input 
@@ -55,8 +61,8 @@ export default function SearchPlayer(){
                             key={user.bungieGlobalDisplayNameCode}
                             onClick={
                                         () => {
-                                            handleSelect(user.bungieGlobalDisplayName + "#" + user.bungieGlobalDisplayNameCode);
-                                            setID(user.destinyMemberships[0].membershipId as number)
+                                            setID(user.destinyMemberships[0].membershipId, user.destinyMemberships[0].membershipType);
+                                            handleSelect(user.bungieGlobalDisplayName + "#" + user.bungieGlobalDisplayNameCode)
                                         }
                                     }
                         >
