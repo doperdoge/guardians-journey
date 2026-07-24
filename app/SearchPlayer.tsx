@@ -20,6 +20,8 @@ export default function SearchPlayer(){
         try {
             const res = await fetch(`http://localhost:3000/api/user?${params}`);
             const data = await res.json();
+            // console.log(data.Response.searchResults[0].destinyMemberships);
+            // console.log(typeof data.Response.searchResults[0].destinyMemberships)
             setResults(data.Response.searchResults);
         } catch (error) {
             console.error(error)
@@ -36,15 +38,22 @@ export default function SearchPlayer(){
         try {
             const res = await fetch(`http://localhost:3000/api/user-data?${params}`);
             const data = await res.json();
-            console.log(data)
+            console.log(data);
         } catch (error) {
             console.error(error)
         }
     }
 
-    function setID(userID: string, memberType: string){
-        user_membership_id = userID;
-        user_membership_type = memberType;
+    function setID(userData = []){
+        for(let i = 0; i < userData.length; i++){
+            if(userData[i].membershipType == userData[i].crossSaveOverride){
+                user_membership_id = `${userData[i].membershipId}`;
+                user_membership_type = `${userData[i].membershipType}`;
+                console.log(typeof user_membership_id);
+                console.log(typeof user_membership_type);
+                break;
+            }
+        }
     }
 
     return(
@@ -61,7 +70,7 @@ export default function SearchPlayer(){
                             key={user.bungieGlobalDisplayNameCode}
                             onClick={
                                         () => {
-                                            setID(user.destinyMemberships[0].membershipId, user.destinyMemberships[0].membershipType);
+                                            setID(user.destinyMemberships);
                                             handleSelect(user.bungieGlobalDisplayName + "#" + user.bungieGlobalDisplayNameCode)
                                         }
                                     }
