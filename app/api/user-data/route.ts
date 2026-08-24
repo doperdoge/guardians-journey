@@ -28,6 +28,7 @@ export async function GET(request: NextRequest){
 
   const profile_data = await historical_stats.json();
   const user_characters  = profile_data.Response.characters;
+  const user_data = [];
 
   for(let i = 0; i < user_characters.length; i++){
     if(user_characters[i].deleted == true ) continue;
@@ -36,24 +37,30 @@ export async function GET(request: NextRequest){
       "X-API-Key": apiKey
     }
 
-    const [histStats, actHist, aggStats, wepStats] = await Promise.all([
-      fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/UniqueWeapons/`, {headers}),
+    const [actHist, aggStats, wepStats] = await Promise.all([
+      // fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/UniqueWeapons/`, {headers}),
       fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/Activities/`, {headers}),
       fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/AggregateActivityStats/`, {headers}),
       fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/UniqueWeapons/`, {headers}),
     ]);
 
-    const [histStatsData, actHistData, aggStatsData, wepStatsData] = await Promise.all([
-      histStats.json(),
+    const [actHistData, aggStatsData, wepStatsData] = await Promise.all([
+      // histStats.json(),
       actHist.json(),
       aggStats.json(),
       wepStats.json(),
     ]);
 
-    console.log(histStatsData);
-    console.log(actHist);
-    console.log(aggStats);
-    console.log(wepStats);
+    // console.log(histStatsData);
+    console.log(actHistData);
+    console.log(aggStatsData);
+    console.log(wepStatsData);
+
+    user_data.push({
+      activityHistory: actHistData,
+      aggregateStats: aggStatsData,
+      weaponsStats: wepStatsData
+    })
   }
 
   // Destiny2.GetDestinyManifest
@@ -65,9 +72,7 @@ export async function GET(request: NextRequest){
   // });
 
 
-  // const data = await accStats.json();
-  // console.log(data)
-  return new Response(JSON.stringify(profile_data), {
+  return new Response(JSON.stringify(user_data[0]), {
     status: 200,
     headers: { 'Content-Type': 'application/json' }
   });
