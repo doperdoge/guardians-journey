@@ -31,37 +31,6 @@ export async function GET(request: NextRequest){
 
   for(let i = 0; i < user_characters.length; i++){
     if(user_characters[i].deleted == true ) continue;
-    // // Destiny2.GetHistoricalStats 
-    // const histStats = await fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/`,{
-    //   method: "GET",
-    //   headers: {
-    //       "X-API-Key": apiKey
-    //   },
-    // });
-
-    // // Destiny2.GetActivityHistory
-    // const accHist = await fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${characterId}/Stats/Activities/`,{
-    //   method: "GET",
-    //   headers: {
-    //       "X-API-Key": apiKey
-    //   },
-    // });
-
-    // // Destiny2.GetDestinyAggregateActivityStats *Not sure if GetActivityHistoy is needed with this*
-    // const aggStats = await fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${characterId}/Stats/AggregateActivityStats/`,{
-    //   method: "GET",
-    //   headers: {
-    //       "X-API-Key": apiKey
-    //   },
-    // });
-
-    // // Destiny2.GetUniqueWeaponHistory
-    // const wepStats = await fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${characterId}/Stats/UniqueWeapons/`,{
-    //   method: "GET",
-    //   headers: {
-    //       "X-API-Key": apiKey
-    //   },
-    // });
 
     const headers = {
       "X-API-Key": apiKey
