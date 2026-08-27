@@ -3,6 +3,9 @@ import { NextRequest } from 'next/server';
 require('dotenv').config()
 
 const apiKey = process.env.APIKEY
+const headers = {
+      "X-API-Key": apiKey
+    }
 
 export async function GET(request: NextRequest){
     // Parse the request body
@@ -13,9 +16,7 @@ export async function GET(request: NextRequest){
   // Destiny2.GetHistoricalStatsForAccount API Call
   const historical_stats = await fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Stats/`,{
     method: "GET",
-    headers: {
-        "X-API-Key": apiKey
-    },
+    headers,
   });
 
   // // Destiny2.GetLinkedProfiles *Prob not needed*
@@ -33,9 +34,7 @@ export async function GET(request: NextRequest){
   for(let i = 0; i < user_characters.length; i++){
     if(user_characters[i].deleted == true ) continue;
 
-    const headers = {
-      "X-API-Key": apiKey
-    }
+    
 
     const [actHist, aggStats, wepStats] = await Promise.all([
       // fetch(`https://www.bungie.net/Platform/Destiny2/${membershipType}/Account/${membershipId}/Character/${user_characters[i].characterId}/Stats/UniqueWeapons/`, {headers}),
