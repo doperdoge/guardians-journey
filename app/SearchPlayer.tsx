@@ -2,6 +2,18 @@
 
 import React, { useState } from 'react';
 
+interface User {
+    bungieGlobalDisplayNameCode:string;
+    bungieGlobalDisplayName:string;
+    destinyMemberships:UserData[];
+}
+
+interface UserData {
+    membershipType:number;
+    crossSaveOverride:number;
+    membershipId: number;
+}
+
 export default function SearchPlayer(){
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
@@ -44,13 +56,11 @@ export default function SearchPlayer(){
         }
     }
 
-    function setID(userData = []){
+    function setID(userData: UserData[] = []){
         for(let i = 0; i < userData.length; i++){
             if(userData[i].membershipType == userData[i].crossSaveOverride){
                 user_membership_id = `${userData[i].membershipId}`;
                 user_membership_type = `${userData[i].membershipType}`;
-                console.log(typeof user_membership_id);
-                console.log(typeof user_membership_type);
                 break;
             }
         }
@@ -65,7 +75,7 @@ export default function SearchPlayer(){
                     onChange={(e) => handleChanges(e.target.value)}
                 />
                 <ul>
-                    {results.map((user) => (
+                    {results.map((user: User) => (
                         <li 
                             key={user.bungieGlobalDisplayNameCode}
                             onClick={

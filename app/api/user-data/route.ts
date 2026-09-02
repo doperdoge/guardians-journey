@@ -3,9 +3,25 @@ import { NextRequest } from 'next/server';
 require('dotenv').config()
 
 const apiKey = process.env.APIKEY
-const headers = {
+const headers : any= {
       "X-API-Key": apiKey
     }
+
+// interface Test {
+//   member: string;
+//   child: string;
+// }
+
+
+// interface Test1 {
+//   member: string;
+//   author: string;
+// }
+
+
+// const myfucntion = (data : Test) => {
+//   const {member} = (data as any as Test1);
+// }
 
 export async function GET(request: NextRequest){
     // Parse the request body
